@@ -101,6 +101,38 @@ const funcionController = {
                 error: error.message
             });
         }
+    },
+    actualizarSillas: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const { sillas, totalVenta } = req.body;
+
+            const funcion = await Funcion.findById(id);
+            if (!funcion) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Función no encontrada'
+                });
+            }
+
+            // Actualizar el número de sillas vendidas
+            funcion.sillas_vendidas += sillas.length;
+            // Actualizar el total de ventas
+            funcion.total_ventas += totalVenta;
+
+            await funcion.save();
+
+            res.json({
+                success: true,
+                data: funcion,
+                message: 'Sillas actualizadas correctamente'
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                error: error.message
+            });
+        }
     }
 };
 
